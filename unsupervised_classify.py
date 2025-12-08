@@ -17,8 +17,8 @@ c = 4  # Number of initial clusters
 threshold = 0.60  # Probability threshold for ambiguity
 ambiguous_id = c  # If c=4 (indices 0-3), ambiguous becomes 4
 
-BINS = (8, 8, 8) 
-n_components_pca = 50 
+BINS_V = [32]
+n_components_pca = 16 
 
 # Paths
 src_img_pattern = "car/all_images_labels/images/*.jpg"
@@ -41,11 +41,9 @@ for path in image_paths:
     
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     
-    # Calculate Histogram
-    hist = cv2.calcHist([hsv], [0, 1, 2], None, BINS, [0, 180, 0, 256, 0, 256])
-    
-    # Normalize
-    cv2.normalize(hist, hist)
+
+    hist = cv2.calcHist([hsv], [2], None, BINS_V, [0, 256])
+   
     
     data.append(hist.flatten())
 

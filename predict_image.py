@@ -5,7 +5,7 @@ from sklearn.decomposition import PCA
 import numpy as np
 
 BINS = (8, 8, 8) 
-image = cv2.imread("IMG_3560.jpg")
+image = cv2.imread("street_sign_test.jpg")
 #image = cv2.resize(image, (640, 640))
 
 print("loading models")
