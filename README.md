@@ -1,5 +1,5 @@
-mermaid'''
-flowchart TD
+```mermaid
+graph TD
 
 A[Start: Load Input Image] --> B[Convert to HSV]
 B --> C[Compute V-Channel Histogram<br>(cv2.calcHist)]
@@ -33,4 +33,4 @@ O --> P[Run General YOLO Model for Comparison]
 P --> Q[Display Comparison Result]
 
 Q --> R[End]
-'''
+```
