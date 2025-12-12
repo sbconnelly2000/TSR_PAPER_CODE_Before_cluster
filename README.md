@@ -47,7 +47,10 @@ L --> N
 M --> N
 G --> N
 ```
+
 ## How To Use
 
 Install Dependences
-<pre>``` pip install ultralytics open-cv numpy scikit-learn scikit-fuzzy matplotlib``` </pre>
+```
+pip install ultralytics open-cv numpy scikit-learn scikit-fuzzy matplotlib
+``` 
