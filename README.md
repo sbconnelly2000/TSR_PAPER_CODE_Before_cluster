@@ -1,68 +1,85 @@
-# Traffic Sign Recognition for Varying Lighting Conditions
+Traffic Sign Recognition for Varying Lighting Conditions
 
-**Author:** Samson Connelly  
-**Institution:** Indiana University - Luddy School of Informatics, Computing and Engineering
+This repository implements a traffic sign recognition pipeline that adapts object detection performance to different lighting conditions. The system uses HSV-based preprocessing, PCA, Fuzzy C-Means clustering, and cluster-specific YOLOv8 models to route each image to the most appropriate detector.
 
-## Overview
+This work is based on the accompanying paper Traffic Sign Recognition for Varying Lighting Conditions Using Unsupervised Clustering and YOLOv8.
 
-This project implements a robust **Traffic Sign Recognition (TSR)** system designed to handle challenging lighting environments (e.g., very dark, very bright, or varying weather).
+Overview
 
-Standard object detection models often struggle when lighting conditions drift significantly from the training distribution. This project addresses that challenge by using **unsupervised clustering** to categorize images based on their lighting characteristics and utilizing a **mixture of experts** approach—selecting a specialized YOLOv8 model trained specifically for that lighting condition.
+Lighting variation (nighttime, glare, overexposure, deep shadow) significantly reduces traffic-sign detection accuracy.
+This project addresses that by:
 
-### Key Features
-* **Unsupervised Clustering:** Uses **Fuzzy C-Means (FCM)** on HSV histograms to group images by lighting/brightness.
-* **Dimensionality Reduction:** Applies **Principal Component Analysis (PCA)** to reduce histogram noise.
-* **Adaptive Inference:** Dynamically selects the best model for a given image based on its cluster membership probability.
-* **Ambiguity Handling:** Includes a fallback "General" model for images that do not strongly belong to any specific lighting cluster.
+Converting images to HSV and extracting brightness histograms
 
----
+Reducing histogram dimensionality with PCA
 
-## Methodology
+Using Fuzzy C-Means (FCM) to cluster images into lighting groups
 
-The system follows a two-stage pipeline:
+Training a YOLOv8 model for each cluster
 
-### 1. Clustering & Training Phase
-1.  **Preprocessing:** Convert images to **HSV** color space and extract histograms from the **V (Value)** channel.
-2.  **PCA:** Reduce histogram features from 32 to 16 components to decrease noise.
-3.  **Fuzzy C-Means:** Cluster data into 4 distinct lighting groups:
-    * *Cluster 0:* Slightly Dark
-    * *Cluster 1:* Very Dark
-    * *Cluster 2:* Very Light
-    * *Cluster 3:* Slightly Light
-4.  **Training:** Train separate YOLOv8 models for each cluster, plus one "General" model on the full dataset.
+Selecting the correct model during inference using cluster probabilities
 
-### 2. Inference Phase
-1.  New image $\rightarrow$ HSV Histogram $\rightarrow$ PCA Projection.
-2.  Calculate membership probability for all clusters.
-3.  **Routing Logic:**
-    * If `max_prob < 0.6` $\rightarrow$ Use **General Model** (Ambiguous).
-    * If `Cluster 1` (Very Dark) $\rightarrow$ Use **Cluster 0 Model** (due to data scarcity).
-    * If `Cluster 2` (Very Light) $\rightarrow$ Use **Cluster 3 Model**.
-    * Otherwise $\rightarrow$ Use the specific cluster model.
+Method Summary
+Preprocessing
 
----
+RGB → HSV
 
-##  Getting Started
+V-channel histogram (32 bins → reduced to 16 with PCA)
 
-### Prerequisites
-* Python 3.8+
-* [Ultralytics YOLOv8](https://docs.ultralytics.com/)
-* Scikit-learn
-* OpenCV
-* NumPy
+Clustering
 
-### Installation
+Fuzzy C-Means
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/sbconnelly2000/Traffic-Sign-Recognition-for-Varying-Lighting-Conditions.git](https://github.com/sbconnelly2000/Traffic-Sign-Recognition-for-Varying-Lighting-Conditions.git)
-    cd Traffic-Sign-Recognition-for-Varying-Lighting-Conditions
-    ```
+Four lighting clusters identified (slightly dark, very dark, very bright, slightly bright)
 
-2.  **Install dependencies:**
-    ```bash
-    pip install ultralytics scikit-learn opencv-python numpy matplotlib
-    ```
+Low-confidence samples use the general model
 
----
+Due to limited data:
 
+Cluster 1 → fallback to Cluster 0
+
+Cluster 2 → fallback to Cluster 3
+
+Model Training
+
+YOLOv8n models trained for each cluster
+
+General YOLOv8n baseline trained on full dataset
+
+Training parameters: epochs=100, patience=5, mixup=0.1
+
+Inference
+
+The pipeline:
+
+Compute HSV histogram
+
+Apply PCA
+
+Compute FCM probabilities
+
+Select model
+
+Run YOLOv8 detection
+
+Results (Short Summary)
+
+Cluster models generally perform below the general model due to limited data
+
+However, clusters 0 and 3 match the general model for stop sign detection
+
+Example: A bright-lighting image produces a correct stop sign detection using the cluster-based model, while the general model fails
+
+This suggests potential for adaptive TSR systems with larger datasets.
+
+Installation
+git clone https://github.com/sbconnelly2000/Traffic-Sign-Recognition-for-Varying-Lighting-Conditions
+cd Traffic-Sign-Recognition-for-Varying-Lighting-Conditions
+pip install -r requirements.txt
+
+Usage
+Train
+python training/train_cluster_models.py
+
+Inference
+python inference/predict.py --image path/to/image.jpg
