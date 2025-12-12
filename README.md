@@ -4,6 +4,9 @@
 
 This project addresses the issue of varying lighting conditions affecting Traffic Sign Recognition Models. By using Fuzzy C Means on HSV histograms to classify images into clusters based on lighting. The project automatically classifies and image the runs YOLOv8 object detection on the image using a model trained on similar images.
 
+## Dataset
+This project used the Self Driving Cars Dataset on RoboFlow
+
 ## Training 
  * Convert RGB Images to HSV Color Space
  * Create 32 feature Histograms Based On The V value
@@ -20,7 +23,7 @@ This project addresses the issue of varying lighting conditions affecting Traffi
  * Run Inference
 
 ## Predict Visual
-mermaid```
+```mermaid
 flowchart TD
 
 A[Load Input Image] --> B[Convert to HSV]
@@ -48,9 +51,31 @@ M --> N
 G --> N
 ```
 
+
+
 ## How To Use
 
 Install Dependences
 ```
 pip install ultralytics open-cv numpy scikit-learn scikit-fuzzy matplotlib
-``` 
+```
+
+Determine Number of Clusters Using Elbow Method
+```
+python3 use_elbow_method.py
+```
+Sort Clusters
+```
+python3 unsupervised_classify.py
+```
+
+Predict Image
+```
+python3 predict_image.py
+```
+
+## Results
+This system showed that it may be viable way to perform object detection in various lighting conditions. To confirm this more research must be done with a larger dataset.
+
+A more detailed report can be found in research_paper.pdf
+
