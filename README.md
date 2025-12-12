@@ -1,13 +1,9 @@
 # Traffic Sign Recognition for Varying Lighting Conditions
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![YOLOv8](https://img.shields.io/badge/YOLO-v8-purple)
-![License](https://img.shields.io/badge/License-MIT-green)
-
 **Author:** Samson Connelly  
 **Institution:** Indiana University - Luddy School of Informatics, Computing and Engineering
 
-## 📖 Overview
+## Overview
 
 This project implements a robust **Traffic Sign Recognition (TSR)** system designed to handle challenging lighting environments (e.g., very dark, very bright, or varying weather).
 
@@ -21,7 +17,7 @@ Standard object detection models often struggle when lighting conditions drift s
 
 ---
 
-## ⚙️ Methodology
+## Methodology
 
 The system follows a two-stage pipeline:
 
@@ -46,7 +42,7 @@ The system follows a two-stage pipeline:
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 * Python 3.8+
@@ -70,14 +66,3 @@ The system follows a two-stage pipeline:
 
 ---
 
-## 📂 Repository Structure
-
-```text
-├── data/                  # Dataset files (images and labels)
-├── models/                # Trained YOLOv8 weights (.pt) and PCA/FCM models
-├── scripts/
-│   ├── clustering.py      # HSV extraction, PCA, and Fuzzy C-Means logic
-│   ├── train_pipeline.py  # Data splitting and YOLOv8 training script
-│   └── inference.py       # Main prediction pipeline
-├── research_paper.pdf     # Full technical report
-└── README.md              # Project documentation
