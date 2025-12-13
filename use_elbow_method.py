@@ -6,8 +6,8 @@ from sklearn.decomposition import PCA
 import skfuzzy as fuzz 
 
 
-BINS = (8, 8, 8) 
-n_components_pca = 50 
+BINS_V = [32]
+n_components_pca = 16
 
 image_paths = glob.glob("car/all_images_labels/images/*.jpg")
 
@@ -24,13 +24,10 @@ for path in image_paths:
     
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     
-    
-    hist = cv2.calcHist([hsv], [0, 1, 2], None, BINS, [0, 180, 0, 256, 0, 256])
-    
-    
-    cv2.normalize(hist, hist)
-    
 
+    hist = cv2.calcHist([hsv], [2], None, BINS_V, [0, 256])
+   
+    
     data.append(hist.flatten())
 
 X = np.array(data)
@@ -45,7 +42,7 @@ X_fuzzy = X_pca.T
 fpcs = [] 
 
 
-n_clusters_range = range(2, 21) 
+n_clusters_range = range(2, 11) 
 
 print("Running Fuzzy C-Means loop...")
 for ncenters in n_clusters_range:
@@ -64,6 +61,6 @@ fig, ax = plt.subplots()
 ax.plot(n_clusters_range, fpcs, 'bx-')
 ax.set_xlabel('Number of Clusters (k)')
 ax.set_ylabel('Fuzzy Partition Coefficient (FPC)')
-ax.set_title('Elbow Methods)')
+ax.set_title('Elbow Method')
 plt.grid(True)
 plt.show()
